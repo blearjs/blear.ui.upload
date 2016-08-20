@@ -84,7 +84,9 @@ pro[_resetInputFile] = function () {
         if (inputFileEl.value) {
             modification.remove(inputFileEl);
             the[_inputFileEl] = null;
+            the.emit('beforeUpload');
             options.onUpload(inputFileEl, function (err, url) {
+                the.emit('afterUpload');
                 if (err) {
                     return the.emit('error', err);
                 }
