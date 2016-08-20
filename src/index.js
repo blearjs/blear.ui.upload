@@ -6,10 +6,10 @@
 
 'use strict';
 
-var Dialog = require('blear.ui.dialog');
-var object = require('blear.utils.object');
-var Template = require('blear.classes.template');
-var selector = require('blear.core.selector');
+var Dialog =       require('blear.ui.dialog');
+var object =       require('blear.utils.object');
+var Template =     require('blear.classes.template');
+var selector =     require('blear.core.selector');
 var modification = require('blear.core.modification');
 
 var template = require('./template.html');
