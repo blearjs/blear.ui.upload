@@ -1,0 +1,27 @@
+.blearui-upload {
+  background: #fff;
+
+  &-content {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+  }
+
+  &-tips {
+    text-align: center;
+    line-height: 200px;
+    color: #bbb;
+    font-size: 22px;
+  }
+
+  &-file {
+    position: absolute;
+    font-size: 100em;
+    right: 0;
+    top: 0;
+    cursor: pointer;
+    opacity: 0;
+    -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+  }
+}
