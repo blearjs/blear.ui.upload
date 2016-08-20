@@ -42,6 +42,15 @@ var Upload = Dialog.extend({
         }));
         the[_contentEl] = selector.query('.' + namespace + '-content', the.getContainerEl())[0];
         the[_resetInputFile]();
+    },
+
+
+    /**
+     * 获取内容区域元素对象
+     * @returns {HTMLDivElement}
+     */
+    getContentEl: function () {
+        return this[_contentEl];
     }
 });
 var _options = Upload.sole();
@@ -56,7 +65,7 @@ pro[_resetInputFile] = function () {
     var the = this;
     var options = the[_options];
 
-    if(the[_inputFileEl]) {
+    if (the[_inputFileEl]) {
         modification.remove(the[_inputFileEl]);
         the[_inputFileEl] = null;
     }
@@ -72,11 +81,11 @@ pro[_resetInputFile] = function () {
     modification.insert(inputFileEl, the[_contentEl]);
 
     inputFileEl.onchange = function () {
-        if(inputFileEl.value) {
+        if (inputFileEl.value) {
             modification.remove(inputFileEl);
             the[_inputFileEl] = null;
             options.onUpload(inputFileEl, function (err, url) {
-                if(err) {
+                if (err) {
                     return the.emit('error', err);
                 }
 
