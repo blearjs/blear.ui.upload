@@ -6,15 +6,16 @@
 
 'use strict';
 
-var Dialog =       require('blear.ui.dialog');
-var object =       require('blear.utils.object');
-var Template =     require('blear.classes.template');
-var selector =     require('blear.core.selector');
+var Dialog = require('blear.ui.dialog');
+var object = require('blear.utils.object');
+var Template = require('blear.classes.template');
+var selector = require('blear.core.selector');
 var modification = require('blear.core.modification');
 
 var template = require('./template.html');
 
 var namespace = 'blearui-upload';
+var index = 0;
 var tpl = new Template(template);
 var defaults = {
     dialog: {
@@ -51,13 +52,23 @@ var Upload = Dialog.extend({
      */
     getContentEl: function () {
         return this[_contentEl];
+    },
+
+    /**
+     * 主动上传
+     * @returns {Upload}
+     */
+    upload: function () {
+        var the = this;
+        the[_upload]();
+        return the;
     }
 });
 var _options = Upload.sole();
 var _contentEl = Upload.sole();
 var _inputFileEl = Upload.sole();
 var _resetInputFile = Upload.sole();
-var _changeMode = Upload.sole();
+var _upload = Upload.sole();
 var pro = Upload.prototype;
 
 // 重置 input
@@ -67,6 +78,7 @@ pro[_resetInputFile] = function () {
 
     if (the[_inputFileEl]) {
         modification.remove(the[_inputFileEl]);
+        the[_inputFileEl].onchange = null;
         the[_inputFileEl] = null;
     }
 
@@ -74,33 +86,48 @@ pro[_resetInputFile] = function () {
         type: 'file',
         name: options.name,
         accept: options.accept,
-        'class': namespace + '-file'
+        'class': namespace + '-file',
+        id: namespace + index++
     });
 
     inputFileEl.multiple = options.multiple;
     modification.insert(inputFileEl, the[_contentEl]);
-
     inputFileEl.onchange = function () {
         if (inputFileEl.value) {
-            modification.remove(inputFileEl);
-            the[_inputFileEl] = null;
-            the.emit('beforeUpload');
-            options.onUpload(inputFileEl, function (err, url) {
-                the.emit('afterUpload');
-                if (err) {
-                    return the.emit('error', err);
-                }
+            the[_resetInputFile]();
+            the[_inputFileEl] = inputFileEl;
 
-                the.emit('success', url);
-            });
+            if (the.emit('beforeUpload', inputFileEl) === false) {
+                return;
+            }
+
+            // 被动上传
+            the[_upload]();
         }
     };
 };
 
 
 // 切换模式
-pro[_changeMode] = function (isUploading) {
+pro[_upload] = function () {
+    var the = this;
+    var options = the[_options];
+    var inputFileEl = the[_inputFileEl];
 
+    if (!inputFileEl) {
+        return;
+    }
+
+    the[_inputFileEl] = null;
+    options.onUpload(inputFileEl, function (err, url) {
+        the.emit('afterUpload', inputFileEl);
+
+        if (err) {
+            return the.emit('error', err);
+        }
+
+        the.emit('success', url);
+    });
 };
 
 require('./style.css', 'css|style');
