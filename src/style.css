@@ -12,7 +12,7 @@
   .blearui-upload-file {
     position: absolute;
     font-size: 100em;
-    left: 0;
+    right: 0;
     top: 0;
     cursor: pointer;
     opacity: 0;
