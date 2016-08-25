@@ -62,11 +62,27 @@ var Upload = Dialog.extend({
         var the = this;
         the[_upload]();
         return the;
+    },
+
+
+    /**
+     * 销毁实例
+     */
+    destroy: function () {
+        var the = this;
+
+        the[_nextInputFileEl].onchange = null;
+        the[_nextInputFileEl] = null;
+        the[_lastInputFileEl] = null;
+        modification.remove(the[_contentEl]);
+        the[_contentEl] = null;
+        Upload.superInvoke('destroy', the);
     }
 });
 var _options = Upload.sole();
 var _contentEl = Upload.sole();
-var _inputFileEl = Upload.sole();
+var _nextInputFileEl = Upload.sole();
+var _lastInputFileEl = Upload.sole();
 var _resetInputFile = Upload.sole();
 var _upload = Upload.sole();
 var pro = Upload.prototype;
@@ -75,14 +91,7 @@ var pro = Upload.prototype;
 pro[_resetInputFile] = function () {
     var the = this;
     var options = the[_options];
-
-    if (the[_inputFileEl]) {
-        modification.remove(the[_inputFileEl]);
-        the[_inputFileEl].onchange = null;
-        the[_inputFileEl] = null;
-    }
-
-    var inputFileEl = modification.create('input', {
+    var inputFileEl = the[_nextInputFileEl] = modification.create('input', {
         type: 'file',
         name: options.name,
         accept: options.accept,
@@ -95,7 +104,9 @@ pro[_resetInputFile] = function () {
     inputFileEl.onchange = function () {
         if (inputFileEl.value) {
             the[_resetInputFile]();
-            the[_inputFileEl] = inputFileEl;
+            the[_lastInputFileEl] = inputFileEl;
+            modification.remove(inputFileEl);
+            inputFileEl.onchange = null;
 
             if (the.emit('beforeUpload', inputFileEl) === false) {
                 return;
@@ -112,13 +123,13 @@ pro[_resetInputFile] = function () {
 pro[_upload] = function () {
     var the = this;
     var options = the[_options];
-    var inputFileEl = the[_inputFileEl];
+    var inputFileEl = the[_lastInputFileEl];
 
     if (!inputFileEl) {
         return;
     }
 
-    the[_inputFileEl] = null;
+    the[_lastInputFileEl] = null;
     options.onUpload(inputFileEl, function (err, url) {
         the.emit('afterUpload', inputFileEl);
 
