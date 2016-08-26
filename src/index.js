@@ -24,7 +24,7 @@ var defaults = {
     },
     tips: '点击选择文件并上传',
     name: 'file',
-    accept: '*/*',
+    accept: undefined,
     multiple: false,
     onUpload: function (fileInputEl, done) {
         done(new Error('未配置上传'));
@@ -91,16 +91,23 @@ var pro = Upload.prototype;
 pro[_resetInputFile] = function () {
     var the = this;
     var options = the[_options];
-    var inputFileEl = the[_nextInputFileEl] = modification.create('input', {
+    var attributes = {
         type: 'file',
         name: options.name,
-        accept: options.accept,
         'class': namespace + '-file',
-        id: namespace + index++
-    });
+        id: namespace + index++,
+        tabIndex: -1
+    };
+
+    // chrome 下，accept 条件越宽反应越慢
+    if (options.accept) {
+        attributes.accept = options.accept;
+    }
+
+    var inputFileEl = the[_nextInputFileEl] = modification.create('input', attributes);
 
     inputFileEl.multiple = options.multiple;
-    modification.insert(inputFileEl, the[_contentEl]);
+    modification.insert(inputFileEl, the[_contentEl], 'afterbegin');
     inputFileEl.onchange = function () {
         if (inputFileEl.value) {
             the[_resetInputFile]();
