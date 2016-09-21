@@ -24,7 +24,7 @@ var defaults = {
     },
     tips: '点击选择文件并上传',
     name: 'file',
-    accept: undefined,
+    accept: null,
     multiple: false,
     onUpload: function (fileInputEl, done) {
         done(new Error('未配置上传'));
