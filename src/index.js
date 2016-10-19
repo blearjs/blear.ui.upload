@@ -66,6 +66,21 @@ var Upload = Dialog.extend({
 
 
     /**
+     * 重置上传输入框
+     * @returns {Upload}
+     */
+    reset: function () {
+        var the = this;
+
+        if(the[_lastInputFileEl]){
+            modification.remove( the[_lastInputFileEl]);
+            the[_lastInputFileEl] = null;
+        }
+        return the;
+    },
+
+
+    /**
      * 销毁实例
      */
     destroy: function () {
@@ -112,7 +127,6 @@ pro[_resetInputFile] = function () {
         if (inputFileEl.value) {
             the[_resetInputFile]();
             the[_lastInputFileEl] = inputFileEl;
-            modification.remove(inputFileEl);
             inputFileEl.onchange = null;
 
             if (the.emit('beforeUpload', inputFileEl) === false) {
@@ -139,6 +153,7 @@ pro[_upload] = function () {
     the[_lastInputFileEl] = null;
     options.onUpload(inputFileEl, function (err, url) {
         the.emit('afterUpload', inputFileEl);
+        the.reset();
 
         if (err) {
             return the.emit('error', err);
