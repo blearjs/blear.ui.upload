@@ -10,6 +10,7 @@ var Dialog = require('blear.ui.dialog');
 var object = require('blear.utils.object');
 var Template = require('blear.classes.template');
 var selector = require('blear.core.selector');
+var attribute = require('blear.core.attribute');
 var modification = require('blear.core.modification');
 
 var template = require('./template.html');
@@ -128,6 +129,7 @@ pro[_resetInputFile] = function () {
             the[_resetInputFile]();
             the[_lastInputFileEl] = inputFileEl;
             inputFileEl.onchange = null;
+            attribute.hide(inputFileEl);
 
             if (the.emit('beforeUpload', inputFileEl) === false) {
                 return;
