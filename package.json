@@ -1,6 +1,6 @@
 {
   "name": "blear.ui.upload",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "上传对话框 UI",
   "scripts": {
     "live": "browser-sync start --config bs-config.js"
@@ -8,7 +8,7 @@
   "preferGlobal": false,
   "bin": {},
   "engines": {
-    "node": ">=1.0.0",
+    "node": ">=6.0.0",
     "iojs": ">=1.0.0"
   },
   "main": "src/index.js",
@@ -42,6 +42,8 @@
     "blear.core.modification": "1.x"
   },
   "peerDependencies": {},
-  "devDependencies": {},
+  "devDependencies": {
+    "coolie.js": "^2.2.0"
+  },
   "license": "MIT"
 }
